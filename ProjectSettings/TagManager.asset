@@ -4,10 +4,11 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Canica
-  - Suelo
-  - Pared
-  - CanicaFija
+  - VERDE
+  - ROJO
+  - AMARILLO
+  - AZUL
+  - MORADO
   layers:
   - Default
   - TransparentFX
@@ -15,7 +16,7 @@ TagManager:
   - 
   - Water
   - UI
-  - Suelo
+  - 
   - 
   - 
   - 
