@@ -9,6 +9,9 @@ TagManager:
   - AMARILLO
   - AZUL
   - MORADO
+  - Pared
+  - Suelo
+  - CanicaFija
   layers:
   - Default
   - TransparentFX
@@ -16,7 +19,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - Suelo
   - 
   - 
   - 
