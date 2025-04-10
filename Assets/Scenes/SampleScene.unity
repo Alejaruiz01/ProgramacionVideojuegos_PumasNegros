@@ -2003,7 +2003,7 @@ GameObject:
   - component: {fileID: 1657110925}
   - component: {fileID: 1657110924}
   m_Layer: 6
-  m_Name: Suelo
+  m_Name: Suelo1
   m_TagString: Suelo
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
