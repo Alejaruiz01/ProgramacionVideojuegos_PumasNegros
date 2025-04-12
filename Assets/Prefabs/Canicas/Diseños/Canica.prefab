@@ -162,5 +162,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 1
+  moveDelay: 0.15
+  moveTimer: 0
   fastFallSpeed: 1
   spawner: {fileID: 0}
