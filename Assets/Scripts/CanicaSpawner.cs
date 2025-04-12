@@ -9,6 +9,7 @@ public class CanicaSpawner : MonoBehaviour
     public void SpawnCanica()
     {
         GameObject nuevaCanica = Instantiate(canicaPrefab, transform.position, Quaternion.identity);
+        nuevaCanica.transform.localScale *= 1.5f;
 
         // Pasa la referencia del spawner a la nueva canica
         CanicaController controller = nuevaCanica.GetComponent<CanicaController>();
