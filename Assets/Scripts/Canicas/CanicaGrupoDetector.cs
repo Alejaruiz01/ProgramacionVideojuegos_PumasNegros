@@ -29,7 +29,7 @@ public class CanicaGrupoDetector : MonoBehaviour
 
             if (spawner != null)
             {
-                spawner.GenerarNuevoGrupo();
+                spawner.PermitirGeneracion();
                 Debug.Log("¡Nuevo grupo generado por CanicaGrupoDetector!");
             }
 
@@ -90,5 +90,7 @@ public class CanicaGrupoDetector : MonoBehaviour
             if (clon.GetComponent<CanicaIndividualDetector>() == null)
                 clon.AddComponent<CanicaIndividualDetector>();
         }
+
+        FindObjectOfType<DetectorDeGrupos>()?.StartCoroutine("DetectarYDestruirGrupos");
     }
 }

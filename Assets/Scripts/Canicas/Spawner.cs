@@ -4,25 +4,50 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    public GameObject canicaGrupoPrefab;
+    public GameObject prefabCanicaGrupo;
+    public Transform puntoSpawn;
+    public DetectorDeGrupos detectorDeGrupos;
 
-    private GameObject canicaActual;
-
-    public void GenerarNuevoGrupo()
-    {
-        if (canicaGrupoPrefab == null)
-        {
-            Debug.LogError("Prefab del grupo de canicas no asignado.");
-            return;
-        }
-
-        // Instanciar el grupo (que ya tiene las 3 canicas hijas)
-        canicaActual = Instantiate(canicaGrupoPrefab, transform.position, Quaternion.identity);
-        Debug.Log("Nuevo grupo instanciado desde prefab.");
-    }
+    private bool puedeGenerar = false;
 
     void Start()
     {
-        GenerarNuevoGrupo();
+        detectorDeGrupos = FindObjectOfType<DetectorDeGrupos>();
+        // Generar el primer grupo automáticamente al inicio
+        GenerarGrupo();
+    }
+
+    void Update()
+    {
+        if (puedeGenerar && NoHayCanicaGrupoActivo())
+        {
+            puedeGenerar = false;
+            StartCoroutine(EsperarYGenerar());
+        }
+    }
+
+    IEnumerator EsperarYGenerar()
+    {
+        if (detectorDeGrupos != null && detectorDeGrupos.huboDestruccion)
+        {
+            yield return new WaitForSeconds(5f);
+        }
+        
+        GenerarGrupo();
+    }
+
+    public void PermitirGeneracion()
+    {
+        puedeGenerar = true;
+    }
+
+    public bool NoHayCanicaGrupoActivo()
+    {
+        return GameObject.FindObjectOfType<CanicaGrupoDetector>() == null;
+    }
+
+    void GenerarGrupo()
+    {
+        Instantiate(prefabCanicaGrupo, puntoSpawn.position, Quaternion.identity);
     }
 }

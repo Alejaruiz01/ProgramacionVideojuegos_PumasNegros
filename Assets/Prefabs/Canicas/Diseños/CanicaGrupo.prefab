@@ -64,11 +64,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bf2cf99f7b1a6449b472323278fc4a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distanciaMovimiento: 0.25
+  distanciaMovimiento: 0.15
   tiempoEntreMovimientos: 0.2
-  capaColision:
-    serializedVersion: 2
-    m_Bits: 192
 --- !u!114 &5306938872724929873
 MonoBehaviour:
   m_ObjectHideFlags: 0
