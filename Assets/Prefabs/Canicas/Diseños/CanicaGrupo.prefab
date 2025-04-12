@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: -7253847118385747239}
   - component: {fileID: 1926294371645874773}
   - component: {fileID: 5306938872724929873}
-  - component: {fileID: -2112633364873532008}
   m_Layer: 0
   m_Name: CanicaGrupo
   m_TagString: Untagged
@@ -48,11 +47,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canicaColores:
-  - {fileID: 972677410393861308, guid: 42d8491e753d1e84cb20bbb9c60fd550, type: 3}
-  - {fileID: 5732778946708192169, guid: efd58264de42eea4c8399969dc007f05, type: 3}
-  - {fileID: 7063849297783097291, guid: 12a877a73b8381c4a9eb0ee443805ffc, type: 3}
-  - {fileID: 1696578073960350135, guid: d033d5d703d8aca43a94b4de346deadd, type: 3}
-  - {fileID: 6973382892705747929, guid: 68baecefe358c324aa12f5b92d9cae20, type: 3}
+  - {fileID: 7248800796717560352, guid: 67191b32709bf6142ad5f536cee2ca89, type: 3}
+  - {fileID: 1433341329706225972, guid: 7b06b6b891df0154b97e58fe78feeedc, type: 3}
+  - {fileID: 7879957164977731661, guid: 778f4e3f661df2d4591110972a2e3571, type: 3}
+  - {fileID: 9163989334742927528, guid: f06b966b7c1cbe84dab6a9b9d749b274, type: 3}
+  - {fileID: 7506621668198835544, guid: 3b03caa3ba789d844a95320225f020a1, type: 3}
 --- !u!114 &1926294371645874773
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65,8 +64,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bf2cf99f7b1a6449b472323278fc4a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distanciaMovimiento: 0.2
-  tiempoEntreMovimientos: 0.25
+  distanciaMovimiento: 0.25
+  tiempoEntreMovimientos: 0.2
+  capaColision:
+    serializedVersion: 2
+    m_Bits: 192
 --- !u!114 &5306938872724929873
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -82,20 +84,4 @@ MonoBehaviour:
   capaSuelo:
     serializedVersion: 2
     m_Bits: 64
-  distanciaChequeo: 0.2
---- !u!114 &-2112633364873532008
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7231843134536679474}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bed87e082b4ce1149b226fd7b408dde5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  distanciaChequeo: 0.2
-  capaSuelo:
-    serializedVersion: 2
-    m_Bits: 64
+  distanciaChequeo: 0.45

@@ -8,7 +8,7 @@ public class CanicaGrupoDetector : MonoBehaviour
     private Spawner spawner;
 
     [SerializeField] private LayerMask capaSuelo;
-    [SerializeField] private float distanciaChequeo = 0.3f;
+    [SerializeField] private float distanciaChequeo = 0.6f;
 
     void Start()
     {
@@ -22,12 +22,11 @@ public class CanicaGrupoDetector : MonoBehaviour
     {
         if (!seDetuvo && VerificarContactoConSuelo())
         {
-            Debug.Log("¡Contacto con el suelo detectado!");
+            Debug.Log("¡Todas las canicas tocaron suelo o se detuvieron!");
             seDetuvo = true;
 
             SepararCanicas();
 
-            // ✅ Mover esto antes del Destroy
             if (spawner != null)
             {
                 spawner.GenerarNuevoGrupo();
@@ -40,20 +39,33 @@ public class CanicaGrupoDetector : MonoBehaviour
 
     private bool VerificarContactoConSuelo()
     {
+        int canicasDetenidas = 0;
+
         foreach (Transform canica in transform)
         {
-            Vector2 posicion = canica.position;
-            RaycastHit2D hit = Physics2D.Raycast(posicion, Vector2.down, distanciaChequeo, capaSuelo);
-            Debug.DrawRay(posicion, Vector2.down * distanciaChequeo, Color.red, 0.2f);
-
-            if (hit.collider != null)
+            CircleCollider2D collider = canica.GetComponent<CircleCollider2D>();
+            if (collider != null)
             {
-                Debug.Log($"Raycast impactó con: {hit.collider.name}");
-                return true;
+                float radio = collider.radius * canica.localScale.y;
+                Vector2 origen = (Vector2)canica.position + Vector2.down * radio;
+
+                RaycastHit2D hit = Physics2D.Raycast(origen, Vector2.down, distanciaChequeo, capaSuelo | LayerMask.GetMask("CanicaFija"));
+                Debug.DrawRay(origen, Vector2.down * distanciaChequeo, Color.red, 0.2f);
+
+                if (hit.collider != null)
+                {
+                    canicasDetenidas++;
+                }
+            }
+            else
+            {
+                Debug.LogWarning($"La canica {canica.name} no tiene CircleCollider2D");
             }
         }
-        return false;
+
+        return canicasDetenidas >= 3;
     }
+
 
     private void SepararCanicas()
     {
@@ -63,15 +75,20 @@ public class CanicaGrupoDetector : MonoBehaviour
         {
             GameObject clon = Instantiate(canica.gameObject, canica.position, Quaternion.identity);
             clon.name = canica.name;
-            clon.tag = "CanicaFija";
-            clon.layer = LayerMask.NameToLayer("Suelo");
+            clon.tag = canica.tag; // ¡No cambiamos el tag a "CanicaFija"!
+            clon.layer = LayerMask.NameToLayer("CanicaFija");
 
             Rigidbody2D rb = clon.GetComponent<Rigidbody2D>();
             if (rb != null)
             {
                 rb.velocity = Vector2.zero;
-                rb.bodyType = RigidbodyType2D.Static;
+                rb.gravityScale = 1f;
+                rb.bodyType = RigidbodyType2D.Kinematic;
             }
+
+            // Asegura que tenga el script CanicaIndividualDetector
+            if (clon.GetComponent<CanicaIndividualDetector>() == null)
+                clon.AddComponent<CanicaIndividualDetector>();
         }
     }
 }
