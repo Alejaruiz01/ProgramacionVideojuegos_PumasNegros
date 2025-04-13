@@ -16,7 +16,7 @@ public class GameOverTrigger : MonoBehaviour
         {
             juegoTerminado = true;
             Debug.Log("¡Game Over! Canica fija alcanzó la parte superior.");
-            
+
             // Pausar el juego o activar el menú de Game Over
             Time.timeScale = 0f;
 
