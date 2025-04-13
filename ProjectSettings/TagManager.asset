@@ -12,6 +12,7 @@ TagManager:
   - Pared
   - Suelo
   - CanicaFija
+  - GameOver
   layers:
   - Default
   - TransparentFX

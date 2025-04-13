@@ -47,14 +47,15 @@ public class GravedadDeCanicas : MonoBehaviour
         {
             if (canica.layer == LayerMask.NameToLayer("CanicasDistribuidas"))
             {
-                canica.layer = LayerMask.NameToLayer("CanicaFija");
                 Rigidbody2D rb = canica.GetComponent<Rigidbody2D>();
                 if (rb != null)
                 {
+                    rb.velocity = Vector2.zero;
                     rb.bodyType = RigidbodyType2D.Static;
                     rb.gravityScale = 0f;
-                    rb.velocity = Vector2.zero;
                 }
+
+                canica.layer = LayerMask.NameToLayer("CanicaFija");
             }
         }
     }
