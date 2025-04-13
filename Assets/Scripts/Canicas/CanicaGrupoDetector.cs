@@ -29,8 +29,9 @@ public class CanicaGrupoDetector : MonoBehaviour
 
             if (spawner != null)
             {
-                spawner.PermitirGeneracion();
-                Debug.Log("¡Nuevo grupo generado por CanicaGrupoDetector!");
+                spawner.RevisarDestruccion();
+                // spawner.PermitirGeneracion();
+                // Debug.Log("¡Nuevo grupo generado por CanicaGrupoDetector!");
             }
 
             Destroy(gameObject);
@@ -89,6 +90,11 @@ public class CanicaGrupoDetector : MonoBehaviour
             // Asegura que tenga el script CanicaIndividualDetector
             if (clon.GetComponent<CanicaIndividualDetector>() == null)
                 clon.AddComponent<CanicaIndividualDetector>();
+
+            if (clon.GetComponent<GravedadDeCanicas>() == null)
+            {
+                clon.AddComponent<GravedadDeCanicas>();
+            }
         }
 
         FindObjectOfType<DetectorDeGrupos>()?.StartCoroutine("DetectarYDestruirGrupos");

@@ -12,33 +12,52 @@ public class Spawner : MonoBehaviour
 
     void Start()
     {
-        detectorDeGrupos = FindObjectOfType<DetectorDeGrupos>();
+        if (detectorDeGrupos == null)
+        {
+            detectorDeGrupos = FindObjectOfType<DetectorDeGrupos>();
+        }
+
+        detectorDeGrupos.OnDeteccionTerminada += ManejarResultadoDeDeteccion;
         // Generar el primer grupo automáticamente al inicio
         GenerarGrupo();
     }
 
     void Update()
     {
-        if (puedeGenerar && NoHayCanicaGrupoActivo())
-        {
-            puedeGenerar = false;
-            StartCoroutine(EsperarYGenerar());
-        }
+        
     }
 
-    IEnumerator EsperarYGenerar()
+    void ManejarResultadoDeDeteccion(bool huboDestruccion)
     {
-        if (detectorDeGrupos != null && detectorDeGrupos.huboDestruccion)
+        StartCoroutine(EsperarYGenerar(huboDestruccion));
+    }
+
+    IEnumerator EsperarYGenerar(bool huboDestruccion)
+    {
+        if (huboDestruccion)
         {
-            yield return new WaitForSeconds(5f);
+            yield return new WaitForSeconds(1f);
+        }
+
+        // Prevenir generación múltiple
+        if (NoHayCanicaGrupoActivo())
+        {
+            GenerarGrupo();
         }
         
-        GenerarGrupo();
     }
 
     public void PermitirGeneracion()
     {
         puedeGenerar = true;
+    }
+
+    public void RevisarDestruccion()
+    {
+        if (detectorDeGrupos != null)
+        {
+            detectorDeGrupos.IniciarDeteccion();
+        }
     }
 
     public bool NoHayCanicaGrupoActivo()

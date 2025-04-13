@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class DetectorDeGrupos : MonoBehaviour
 {
+    public Action<bool> OnDeteccionTerminada;
     [SerializeField] private float tiempoAntesDeDestruir = 0.5f;
     [SerializeField] private float radioBusqueda = 0.55f;
     [SerializeField] private LayerMask capaCanicasFija;
@@ -11,14 +13,17 @@ public class DetectorDeGrupos : MonoBehaviour
 
     void Start()
     {
-        // Iniciar la detección después de un pequeño retraso
+    }
+
+    public void IniciarDeteccion()
+    {
         StartCoroutine(DetectarYDestruirGrupos());
     }
 
     public IEnumerator DetectarYDestruirGrupos()
     {
-        yield return new WaitForSeconds(0.5f); // Espera tras caída
         huboDestruccion = false;
+        yield return new WaitForSeconds(0.2f); // Espera tras caída
 
         GameObject[] canicas = GameObject.FindGameObjectsWithTag("VERDE");
         RevisarColor(canicas, "VERDE");
@@ -35,7 +40,15 @@ public class DetectorDeGrupos : MonoBehaviour
         canicas = GameObject.FindGameObjectsWithTag("MORADO");
         RevisarColor(canicas, "MORADO");
 
-        yield return null;
+        yield return new WaitForSeconds(tiempoAntesDeDestruir + 0.1f);
+
+        OnDeteccionTerminada?.Invoke(huboDestruccion);
+
+        if (huboDestruccion)
+            {
+                FindObjectOfType<GravedadDeCanicas>()?.AcomodarCanicas();
+            }
+
     }
 
     void RevisarColor(GameObject[] canicas, string colorTag)
@@ -79,6 +92,8 @@ public class DetectorDeGrupos : MonoBehaviour
 
     IEnumerator DestruirGrupo(List<GameObject> grupo)
     {
+        yield return new WaitForSeconds(tiempoAntesDeDestruir);
+
         // Efecto visual antes de destruir
         foreach (GameObject canica in grupo)
         {
@@ -86,8 +101,6 @@ public class DetectorDeGrupos : MonoBehaviour
             if (sr != null)
                 sr.color = Color.white; // Color temporal antes de destruir
         }
-
-        yield return new WaitForSeconds(tiempoAntesDeDestruir);
 
         foreach (GameObject canica in grupo)
         {
