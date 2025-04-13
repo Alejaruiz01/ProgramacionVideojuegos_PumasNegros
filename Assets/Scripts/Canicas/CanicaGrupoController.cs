@@ -10,9 +10,9 @@ public class CanicaGrupoController : MonoBehaviour
     [Header("Posiciones locales de las 3 canicas")]
     private Vector3[] posiciones = new Vector3[3]
     {
-        new Vector3(0.02860022f, 0.521f, 0.01302223f),       // Canica de arriba
-        new Vector3(-0.18f, 0.13f, 0.01302223f),    // Izquierda abajo
-        new Vector3(0.25f, 0.13f, 0.01302223f)      // Derecha abajo
+        new Vector3(0.0286f, 0.521f, 0.013f),       // Canica de arriba
+        new Vector3(-0.18f, 0.13f, 0.013f),    // Izquierda abajo
+        new Vector3(0.25f, 0.13f, 0.013f)      // Derecha abajo
     };
 
     private void Start()
