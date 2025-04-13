@@ -30,8 +30,6 @@ public class CanicaGrupoDetector : MonoBehaviour
             if (spawner != null)
             {
                 spawner.RevisarDestruccion();
-                // spawner.PermitirGeneracion();
-                // Debug.Log("¡Nuevo grupo generado por CanicaGrupoDetector!");
             }
 
             Destroy(gameObject);
@@ -77,24 +75,24 @@ public class CanicaGrupoDetector : MonoBehaviour
             GameObject clon = Instantiate(canica.gameObject, canica.position, Quaternion.identity);
             clon.name = canica.name;
             clon.tag = canica.tag; // ¡No cambiamos el tag a "CanicaFija"!
-            clon.layer = LayerMask.NameToLayer("CanicaFija");
+
+            clon.layer = LayerMask.NameToLayer("CanicasDistribuidas");
+            // clon.layer = LayerMask.NameToLayer("CanicaFija");
 
             Rigidbody2D rb = clon.GetComponent<Rigidbody2D>();
             if (rb != null)
             {
                 rb.velocity = Vector2.zero;
                 rb.gravityScale = 1f;
-                rb.bodyType = RigidbodyType2D.Kinematic;
+                rb.bodyType = RigidbodyType2D.Dynamic;
             }
-
-            // Asegura que tenga el script CanicaIndividualDetector
-            if (clon.GetComponent<CanicaIndividualDetector>() == null)
-                clon.AddComponent<CanicaIndividualDetector>();
 
             if (clon.GetComponent<GravedadDeCanicas>() == null)
             {
                 clon.AddComponent<GravedadDeCanicas>();
             }
+
+            clon.AddComponent<AutoCambiarLayer>().IniciarCambio("CanicaFija", 1.0f);
         }
 
         FindObjectOfType<DetectorDeGrupos>()?.StartCoroutine("DetectarYDestruirGrupos");

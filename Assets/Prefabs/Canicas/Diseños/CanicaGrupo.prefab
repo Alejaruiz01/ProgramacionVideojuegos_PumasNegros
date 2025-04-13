@@ -81,4 +81,4 @@ MonoBehaviour:
   capaSuelo:
     serializedVersion: 2
     m_Bits: 64
-  distanciaChequeo: 0.45
+  distanciaChequeo: 0.47

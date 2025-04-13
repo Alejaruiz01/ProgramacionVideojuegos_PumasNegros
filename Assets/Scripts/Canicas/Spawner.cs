@@ -8,8 +8,6 @@ public class Spawner : MonoBehaviour
     public Transform puntoSpawn;
     public DetectorDeGrupos detectorDeGrupos;
 
-    private bool puedeGenerar = false;
-
     void Start()
     {
         if (detectorDeGrupos == null)
@@ -45,11 +43,6 @@ public class Spawner : MonoBehaviour
             GenerarGrupo();
         }
         
-    }
-
-    public void PermitirGeneracion()
-    {
-        puedeGenerar = true;
     }
 
     public void RevisarDestruccion()
