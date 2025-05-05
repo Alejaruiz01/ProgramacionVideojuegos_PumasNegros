@@ -1987,7 +1987,7 @@ AudioSource:
   m_Volume: 1
   m_Pitch: 1
   Loop: 1
-  Mute: 0
+  Mute: 1
   Spatialize: 0
   SpatializePostEffects: 0
   Priority: 128
@@ -2870,17 +2870,25 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameOverTrigger
       objectReference: {fileID: 0}
+    - target: {fileID: 2386828956176895659, guid: 80fbb1adcfb919d4fa2b1aecd589a339, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3971354788662574633, guid: 80fbb1adcfb919d4fa2b1aecd589a339, type: 3}
       propertyPath: gameOverPanel
       value: 
       objectReference: {fileID: 204321953}
+    - target: {fileID: 3971354788662574633, guid: 80fbb1adcfb919d4fa2b1aecd589a339, type: 3}
+      propertyPath: capaCanicaFija.m_Bits
+      value: 128
+      objectReference: {fileID: 0}
     - target: {fileID: 6616654547065889786, guid: 80fbb1adcfb919d4fa2b1aecd589a339, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.666
       objectReference: {fileID: 0}
     - target: {fileID: 6616654547065889786, guid: 80fbb1adcfb919d4fa2b1aecd589a339, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.588
+      value: 1.46
       objectReference: {fileID: 0}
     - target: {fileID: 6616654547065889786, guid: 80fbb1adcfb919d4fa2b1aecd589a339, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2916,9 +2924,30 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6617149813065593973, guid: 80fbb1adcfb919d4fa2b1aecd589a339, type: 3}
       propertyPath: m_Color.a
+      value: 0.101960786
+      objectReference: {fileID: 0}
+    - target: {fileID: 6617149813065593973, guid: 80fbb1adcfb919d4fa2b1aecd589a339, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6617149813065593973, guid: 80fbb1adcfb919d4fa2b1aecd589a339, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6617149813065593973, guid: 80fbb1adcfb919d4fa2b1aecd589a339, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6617149813065593973, guid: 80fbb1adcfb919d4fa2b1aecd589a339, type: 3}
+      propertyPath: m_DrawMode
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 6617149813065593973, guid: 80fbb1adcfb919d4fa2b1aecd589a339, type: 3}
+      propertyPath: m_MaskInteraction
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 3971354788662574633, guid: 80fbb1adcfb919d4fa2b1aecd589a339, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

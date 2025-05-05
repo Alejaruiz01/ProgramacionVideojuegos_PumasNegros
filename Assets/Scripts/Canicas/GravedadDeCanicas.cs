@@ -59,4 +59,10 @@ public class GravedadDeCanicas : MonoBehaviour
             }
         }
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+{
+    Debug.Log("Canica tocó: " + collision.gameObject.name);
+}
+
 }

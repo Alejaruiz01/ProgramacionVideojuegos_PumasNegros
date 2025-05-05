@@ -92,6 +92,11 @@ public class CanicaGrupoDetector : MonoBehaviour
                 clon.AddComponent<GravedadDeCanicas>();
             }
 
+            if (clon.GetComponent<GameOverDesdeCanica>() == null)
+            {
+                clon.AddComponent<GameOverDesdeCanica>();
+            }
+
             clon.AddComponent<AutoCambiarLayer>().IniciarCambio("CanicaFija", 1.0f);
         }
 
