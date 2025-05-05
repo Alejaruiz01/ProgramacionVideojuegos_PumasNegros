@@ -65,6 +65,8 @@ public class DetectorDeGrupos : MonoBehaviour
                 if (grupo.Count >= 6)
                 {
                     huboDestruccion = true;
+                    GameManager.Instance.AddPoints(10);
+                    GameManager.Instance.ShowMessage();
                     StartCoroutine(DestruirGrupo(grupo));
                 }
             }
