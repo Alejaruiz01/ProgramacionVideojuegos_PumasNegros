@@ -19,13 +19,12 @@ public class AutoCambiarLayer : MonoBehaviour
         yield return new WaitForSeconds(tiempoEspera);
         gameObject.layer = LayerMask.NameToLayer(nuevoLayer);
 
-        // Opcional: cambiar bodyType para dejarlo estático
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
-        if (rb != null)
+        if (rb != null && rb.bodyType != RigidbodyType2D.Static)
         {
             rb.velocity = Vector2.zero;
             rb.gravityScale = 0f;
-            rb.bodyType = RigidbodyType2D.Kinematic;
+            rb.bodyType = RigidbodyType2D.Kinematic; // O cambia a Static si ya no quieres que se mueva más
         }
 
         Destroy(this); // Elimina este script después de cumplir su propósito
