@@ -53,10 +53,9 @@ public class DetectorDeGrupos : MonoBehaviour
         OnDeteccionTerminada?.Invoke(huboDestruccion);
 
         if (huboDestruccion)
-            {
-                FindObjectOfType<GravedadDeCanicas>()?.AcomodarCanicas();
-            }
-
+        {
+            FindObjectOfType<GravedadDeCanicas>()?.AcomodarCanicas();
+        }
     }
 
     void RevisarColor(GameObject[] canicas, string colorTag)
@@ -75,6 +74,14 @@ public class DetectorDeGrupos : MonoBehaviour
                     gruposParaDestruir.Add(grupo);
                     Debug.Log("Se agrego al grupo");
                     huboDestruccion = true;
+                    
+                    GameManager.Instance.AddPoints(10);
+                    GameManager.Instance.ShowMessage();
+
+                    // 🐸 Activar animación de la ranita si hubo un combo
+                    FindObjectOfType<RanitaCelebracion>()?.Celebrar();
+
+                    StartCoroutine(DestruirGrupo(grupo));
                 }
             }
         }
@@ -154,7 +161,6 @@ public class DetectorDeGrupos : MonoBehaviour
         if (gravedad != null)
         {
             gravedad.AcomodarCanicas();
-
             // Espera a que todas las canicas estén estables
             yield return new WaitUntil(() => gravedad.CanicasEstablesWithFrames(5));
         }
@@ -205,3 +211,4 @@ public class DetectorDeGrupos : MonoBehaviour
         callback?.Invoke(huboDestruccion);
     }
 }
+
