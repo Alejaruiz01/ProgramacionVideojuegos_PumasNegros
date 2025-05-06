@@ -106,6 +106,32 @@ public class DetectorDeGrupos : MonoBehaviour
         }
     }
 
+    private IEnumerator DestruirGrupo(List<GameObject> grupo)
+    {
+        // Espera el tiempo antes de destruir
+        yield return new WaitForSeconds(tiempoAntesDeDestruir);
+
+        // Efecto visual opcional
+        foreach (GameObject canica in grupo)
+        {
+            SpriteRenderer sr = canica.GetComponent<SpriteRenderer>();
+            if (sr != null)
+                sr.color = Color.white;
+        }
+
+        // Pequeño delay para el efecto
+        yield return new WaitForSeconds(0.2f);
+
+        // Destruye las canicas
+        foreach (GameObject canica in grupo)
+        {
+            Destroy(canica);
+        }
+
+        // Quita este grupo de la lista general si estaba ahí
+        gruposParaDestruir.Remove(grupo);
+    }
+
     IEnumerator DestruirTodosLosGrupos(List<List<GameObject>> grupos)
     {
         yield return new WaitForSeconds(tiempoAntesDeDestruir);
