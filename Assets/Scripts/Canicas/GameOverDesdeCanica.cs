@@ -10,9 +10,7 @@ public class GameOverDesdeCanica : MonoBehaviour
         {
             Debug.Log("¡Game Over! Canica alcanzó el GameOverTrigger.");
 
-            // Aquí puedes añadir la lógica de fin del juego:
-            Time.timeScale = 0f;
-            // También podrías activar un panel de UI aquí si quieres.
+            GameManager.Instance.GameOver();
         }
     }
 }

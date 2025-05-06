@@ -17,19 +17,16 @@ public class GameManager : MonoBehaviour
     public GameObject pauseMenu;
     public GameObject messagePanel;
     public GameObject gameOverPanel;
-
+    public GameObject reinicioButton; 
+    public GameObject instructionsPanel;
     private bool isPaused = false;
 
     void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
+        if (Instance == null)
+            Instance = this;
+        else
             Destroy(gameObject);
-            return;
-        }
-
-        Instance = this;
-        DontDestroyOnLoad(gameObject); // Evita que se destruya al cambiar de escena
     }
 
     void Start()
@@ -38,6 +35,7 @@ public class GameManager : MonoBehaviour
         pauseMenu.SetActive(false);
         messagePanel.SetActive(false);
         gameOverPanel.SetActive(false);
+        reinicioButton.SetActive(false);
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
@@ -85,7 +83,15 @@ public class GameManager : MonoBehaviour
     {
         gameOverPanel.SetActive(true);
         Time.timeScale = 0f;
+        reinicioButton.SetActive(true);
     }
+
+    public void OnReinicioButtonPressed()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
 
     public void TogglePause()
     {
@@ -107,14 +113,20 @@ public class GameManager : MonoBehaviour
 
     public void ShowInstructions()
     {
-        // Aquí puedes cargar otra escena o activar un panel con instrucciones
-        UnityEngine.Debug.Log("Mostrar instrucciones");
+        instructionsPanel.SetActive(true);
+        pauseMenu.SetActive(false); // Oculta el menú de pausa
+    }
+
+    public void HideInstructions()
+    {
+        instructionsPanel.SetActive(false);
+        pauseMenu.SetActive(true); // Vuelve a mostrar el menú de pausa
     }
 
     void UpdateUI()
     {
         pointsText.text = "Puntos: " + points;
-        levelText.text = "Nivel: " + level;
+        //levelText.text = "Nivel: " + level;
     }
 }
 
