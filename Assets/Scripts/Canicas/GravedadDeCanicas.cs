@@ -40,7 +40,17 @@ public class GravedadDeCanicas : MonoBehaviour
             }
         }
 
-        yield return new WaitForSeconds(1f); // Tiempo para que caigan
+        // Esperar hasta que todas las canicas distribuidas estén estables
+        yield return new WaitUntil(() => CanicasEstables());
+        // Confirmar estabilidad durante varios frames (evitar falsos positivos)
+        for (int i = 0; i < 5; i++) // Esperar 5 frames estables
+        {
+            yield return new WaitForSeconds(0.05f);
+            if (!CanicasEstables())
+            {
+                i = 0; // Reinicia la cuenta si alguna canica aún se mueve
+            }
+        }
 
         // Al final, volver a colocarlas como "CanicaFija"
         foreach (GameObject canica in GameObject.FindObjectsOfType<GameObject>())
@@ -60,9 +70,44 @@ public class GravedadDeCanicas : MonoBehaviour
         }
     }
 
+    public bool CanicasEstables()
+    {
+        // Verifica que ninguna canica tenga velocidad significativa (ya no está cayendo)
+        Rigidbody2D[] cuerpos = FindObjectsOfType<Rigidbody2D>();
+        foreach (Rigidbody2D rb in cuerpos)
+        {
+            if (rb.gameObject.layer == LayerMask.NameToLayer("CanicasDistribuidas"))
+            {
+                if (rb.velocity.magnitude > 0.05f || rb.IsAwake()) // Umbral de movimiento
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public bool CanicasEstablesWithFrames(int framesSeguidos)
+    {
+        // int contador = 0;
+        Rigidbody2D[] cuerpos = FindObjectsOfType<Rigidbody2D>();
+        foreach (var rb in cuerpos)
+        {
+            if (rb.gameObject.layer == LayerMask.NameToLayer("CanicasDistribuidas"))
+            {
+                if (rb.velocity.magnitude > 0.05f || rb.IsAwake())
+                    return false;
+            }
+        }
+        // Si llegas aquí, son estables este frame
+        return true;
+    }
+
+
+
     private void OnTriggerEnter2D(Collider2D collision)
-{
-    Debug.Log("Canica tocó: " + collision.gameObject.name);
-}
+    {
+        Debug.Log("Canica tocó: " + collision.gameObject.name);
+    }
 
 }

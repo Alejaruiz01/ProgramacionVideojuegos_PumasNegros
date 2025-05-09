@@ -11,6 +11,8 @@ public class DetectorDeGrupos : MonoBehaviour
     [SerializeField] private LayerMask capaCanicasFija;
     public bool huboDestruccion = false;
 
+    private List<List<GameObject>> gruposParaDestruir = new List<List<GameObject>>();
+
     void Start()
     {
     }
@@ -23,7 +25,7 @@ public class DetectorDeGrupos : MonoBehaviour
     public IEnumerator DetectarYDestruirGrupos()
     {
         huboDestruccion = false;
-        yield return new WaitForSeconds(0.2f); // Espera tras caída
+        yield return null;
 
         GameObject[] canicas = GameObject.FindGameObjectsWithTag("VERDE");
         RevisarColor(canicas, "VERDE");
@@ -40,15 +42,20 @@ public class DetectorDeGrupos : MonoBehaviour
         canicas = GameObject.FindGameObjectsWithTag("MORADO");
         RevisarColor(canicas, "MORADO");
 
+        if (gruposParaDestruir.Count > 0)
+        {
+            StartCoroutine(DestruirTodosLosGrupos(gruposParaDestruir));
+        }
+
+
         yield return new WaitForSeconds(tiempoAntesDeDestruir + 0.1f);
 
         OnDeteccionTerminada?.Invoke(huboDestruccion);
 
         if (huboDestruccion)
-            {
-                FindObjectOfType<GravedadDeCanicas>()?.AcomodarCanicas();
-            }
-
+        {
+            FindObjectOfType<GravedadDeCanicas>()?.AcomodarCanicas();
+        }
     }
 
     void RevisarColor(GameObject[] canicas, string colorTag)
@@ -62,11 +69,18 @@ public class DetectorDeGrupos : MonoBehaviour
                 List<GameObject> grupo = new List<GameObject>();
                 BuscarConectadas(canica, grupo, colorTag, visitadas);
 
-                if (grupo.Count >= 6)
+                if (grupo.Count == 6)
                 {
+                    gruposParaDestruir.Add(grupo);
+                    Debug.Log("Se agrego al grupo");
                     huboDestruccion = true;
+                    
                     GameManager.Instance.AddPoints(10);
                     GameManager.Instance.ShowMessage();
+
+                    // 🐸 Activar animación de la ranita si hubo un combo
+                    FindObjectOfType<RanitaCelebracion>()?.Celebrar();
+
                     StartCoroutine(DestruirGrupo(grupo));
                 }
             }
@@ -92,23 +106,135 @@ public class DetectorDeGrupos : MonoBehaviour
         }
     }
 
-    IEnumerator DestruirGrupo(List<GameObject> grupo)
+    private IEnumerator DestruirGrupo(List<GameObject> grupo)
     {
+        // Espera el tiempo antes de destruir
         yield return new WaitForSeconds(tiempoAntesDeDestruir);
 
-        // Efecto visual antes de destruir
+        // Efecto visual opcional
         foreach (GameObject canica in grupo)
         {
             SpriteRenderer sr = canica.GetComponent<SpriteRenderer>();
             if (sr != null)
-                sr.color = Color.white; // Color temporal antes de destruir
+                sr.color = Color.white;
         }
 
+        // Pequeño delay para el efecto
+        yield return new WaitForSeconds(0.2f);
+
+        // Destruye las canicas
         foreach (GameObject canica in grupo)
         {
             Destroy(canica);
         }
 
-        huboDestruccion = true;
+        // Quita este grupo de la lista general si estaba ahí
+        gruposParaDestruir.Remove(grupo);
+    }
+
+    IEnumerator DestruirTodosLosGrupos(List<List<GameObject>> grupos)
+    {
+        yield return new WaitForSeconds(tiempoAntesDeDestruir);
+
+        foreach (List<GameObject> grupo in grupos)
+        {
+            foreach (GameObject canica in grupo)
+            {
+                SpriteRenderer sr = canica.GetComponent<SpriteRenderer>();
+                if (sr != null)
+                    sr.color = Color.white; // Efecto visual opcional
+            }
+        }
+
+        yield return new WaitForSeconds(0.2f); // Espera para el efecto visual
+
+        foreach (List<GameObject> grupo in grupos)
+        {
+            foreach (GameObject canica in grupo)
+            {
+                Destroy(canica);
+                Debug.Log("Se destruyeron las canicas");
+            }
+
+            // ✅ Aquí puedes sumar puntos por grupo destruido
+            // GameManager.Instance?.SumarPuntos(grupo.Count); // En tu caso, siempre será 6
+        }
+
+        gruposParaDestruir.Clear();
+    }
+
+    public void IniciarDeteccionConGravedad()
+    {
+        StartCoroutine(DeteccionEnCadena());
+    }
+
+    private IEnumerator DeteccionEnCadena()
+    {
+        bool destruccionRealizada = false;
+
+        // Paso 1: Detección inicial
+        yield return StartCoroutine(DetectarYDestruirGruposConResultado(r => destruccionRealizada = r));
+
+        if (!destruccionRealizada)
+        {
+            // No hubo destrucción, notifica para generar nuevo grupo
+            FindObjectOfType<Spawner>()?.ManejarResultadoDeDeteccion(false);
+            yield break;
+        }
+
+        // Paso 2: Esperar y aplicar gravedad
+        var gravedad = FindObjectOfType<GravedadDeCanicas>();
+        if (gravedad != null)
+        {
+            gravedad.AcomodarCanicas();
+            // Espera a que todas las canicas estén estables
+            yield return new WaitUntil(() => gravedad.CanicasEstablesWithFrames(5));
+        }
+
+        // Paso 3: Espera un momento y revisa si se formaron nuevos grupos
+        yield return new WaitForSeconds(0.1f);
+
+        if (HayGruposParaDestruir())
+        {
+            // Repetir la detección en cadena
+            yield return DeteccionEnCadena();
+        }
+        else
+        {        
+            // Ahora sí se puede generar nuevo grupo
+            FindObjectOfType<Spawner>()?.ManejarResultadoDeDeteccion(false);
+        }
+    }
+
+
+
+    private bool HayGruposParaDestruir()
+    {
+        string[] colores = new string[] { "ROJO", "AZUL", "AMARILLO", "VERDE", "MORADO" };
+        foreach (string color in colores)
+        {
+            GameObject[] canicas = GameObject.FindGameObjectsWithTag(color);
+            HashSet<GameObject> visitadas = new HashSet<GameObject>();
+
+            foreach (GameObject canica in canicas)
+            {
+                if (!visitadas.Contains(canica))
+                {
+                    List<GameObject> grupo = new List<GameObject>();
+                    BuscarConectadas(canica, grupo, color, visitadas);
+
+                    if (grupo.Count == 6)
+                        return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private IEnumerator DetectarYDestruirGruposConResultado(Action<bool> callback)
+    {
+        yield return StartCoroutine(DetectarYDestruirGrupos());
+        callback?.Invoke(huboDestruccion);
     }
 }
+

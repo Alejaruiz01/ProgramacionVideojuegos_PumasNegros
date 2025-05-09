@@ -20,18 +20,14 @@ public class CanicaGrupoDetector : MonoBehaviour
 
     void Update()
     {
-        if (!seDetuvo && VerificarContactoConSuelo())
+        if (seDetuvo) return;
+
+        if (VerificarContactoConSuelo())
         {
             Debug.Log("¡Todas las canicas tocaron suelo o se detuvieron!");
             seDetuvo = true;
 
             SepararCanicas();
-
-            if (spawner != null)
-            {
-                spawner.RevisarDestruccion();
-            }
-
             Destroy(gameObject);
         }
     }
@@ -39,30 +35,29 @@ public class CanicaGrupoDetector : MonoBehaviour
     private bool VerificarContactoConSuelo()
     {
         int canicasDetenidas = 0;
+        int totalCanicas = transform.childCount;
 
         foreach (Transform canica in transform)
         {
             CircleCollider2D collider = canica.GetComponent<CircleCollider2D>();
-            if (collider != null)
-            {
-                float radio = collider.radius * canica.localScale.y;
-                Vector2 origen = (Vector2)canica.position + Vector2.down * radio;
+            if (collider == null) continue;
 
-                RaycastHit2D hit = Physics2D.Raycast(origen, Vector2.down, distanciaChequeo, capaSuelo | LayerMask.GetMask("CanicaFija"));
-                Debug.DrawRay(origen, Vector2.down * distanciaChequeo, Color.red, 0.2f);
+            float radio = collider.radius * canica.localScale.y;
+            Vector2 origen = (Vector2)canica.position + Vector2.down * radio;
 
-                if (hit.collider != null)
-                {
-                    canicasDetenidas++;
-                }
-            }
-            else
-            {
-                Debug.LogWarning($"La canica {canica.name} no tiene CircleCollider2D");
-            }
+            RaycastHit2D hit = Physics2D.Raycast(
+                origen,
+                Vector2.down,
+                distanciaChequeo,
+                capaSuelo | LayerMask.GetMask("CanicaFija")
+            );
+            Debug.DrawRay(origen, Vector2.down * distanciaChequeo, Color.red, 0.2f);
+
+            if (hit.collider != null)
+                canicasDetenidas++;
         }
 
-        return canicasDetenidas >= 3;
+        return canicasDetenidas >= totalCanicas;
     }
 
 
@@ -77,7 +72,6 @@ public class CanicaGrupoDetector : MonoBehaviour
             clon.tag = canica.tag; // ¡No cambiamos el tag a "CanicaFija"!
 
             clon.layer = LayerMask.NameToLayer("CanicasDistribuidas");
-            // clon.layer = LayerMask.NameToLayer("CanicaFija");
 
             Rigidbody2D rb = clon.GetComponent<Rigidbody2D>();
             if (rb != null)
@@ -100,6 +94,6 @@ public class CanicaGrupoDetector : MonoBehaviour
             clon.AddComponent<AutoCambiarLayer>().IniciarCambio("CanicaFija", 1.0f);
         }
 
-        FindObjectOfType<DetectorDeGrupos>()?.StartCoroutine("DetectarYDestruirGrupos");
+        FindObjectOfType<DetectorDeGrupos>()?.IniciarDeteccionConGravedad();
     }
 }

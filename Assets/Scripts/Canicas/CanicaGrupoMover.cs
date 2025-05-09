@@ -5,8 +5,10 @@ using UnityEngine;
 public class CanicaGrupoMover : MonoBehaviour
 {
     public float distanciaMovimiento = 1f;
-    public float tiempoEntreMovimientos = 0.2f;
-    private float tiempoUltimoMovimiento = 0f;
+    private float retardoInicial = 0.2f;
+    private float velocidadRepeticion = 0.05f;
+    private bool moviendo = false;
+    private float tiempoProximaRepeticion;
 
     private Transform[] canicas = new Transform[3];
     private Vector3[] posiciones = new Vector3[3];
@@ -24,51 +26,50 @@ public class CanicaGrupoMover : MonoBehaviour
         {
             posiciones[i] = canicas[i].localPosition;
         }
-
-        // Obtener las canicas hijas
-        // canicas = new Transform[transform.childCount];
-        // for (int i = 0; i < transform.childCount; i++)
-        // {
-        //     canicas[i] = transform.GetChild(i);
-        // }
     }
 
     private void Update()
     {
-        float tiempoActual = Time.time;
+        if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            moviendo = true;
+            tiempoProximaRepeticion = Time.time + retardoInicial;
+            MoverGrupo(Input.GetKey(KeyCode.LeftArrow) ? Vector3.left : Vector3.right);
+        }
 
-        if (tiempoActual - tiempoUltimoMovimiento > tiempoEntreMovimientos)
+        if (Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.RightArrow))
+        {
+            moviendo = false;
+        }
+
+        if (moviendo && Time.time >= tiempoProximaRepeticion)
         {
             if (Input.GetKey(KeyCode.LeftArrow))
             {
-                transform.position += Vector3.left * distanciaMovimiento;
-                tiempoUltimoMovimiento = tiempoActual;
+                MoverGrupo(Vector3.left);
+                tiempoProximaRepeticion = Time.time + velocidadRepeticion;
             }
             else if (Input.GetKey(KeyCode.RightArrow))
             {
-                transform.position += Vector3.right * distanciaMovimiento;
-                tiempoUltimoMovimiento = tiempoActual;
+                MoverGrupo(Vector3.right);
+                tiempoProximaRepeticion = Time.time + velocidadRepeticion;
             }
+        }
+
+        if (Input.GetKey(KeyCode.DownArrow))
+        {
+            transform.position += Vector3.down * distanciaMovimiento * 10f * Time.deltaTime; // Más rápido que el normal
         }
 
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             RotarEnTriangulo();
         }
-
-        // Rotar el grupo de canicas (jugador 1)
-        // if (Input.GetKeyDown(KeyCode.UpArrow))
-        // {
-        //     RotarCanicas();
-        // }
     }
 
-    void AplicarPosiciones()
+    private void MoverGrupo(Vector3 direccion)
     {
-        for (int j = 0; j < canicas.Length; j++)
-        {
-            canicas[j].localPosition = posiciones[j];
-        }
+        transform.position += direccion * distanciaMovimiento;
     }
 
     void RotarEnTriangulo()
@@ -79,15 +80,4 @@ public class CanicaGrupoMover : MonoBehaviour
         canicas[1].localPosition = canicas[2].localPosition;
         canicas[2].localPosition = temp;
     }
-
-    // private void RotarCanicas()
-    // {
-    //     if (canicas.Length != 3) return;
-
-    //     // Rotar posiciones: A -> B, B -> C, C -> A
-    //     Vector3 temp = canicas[0].localPosition;
-    //     canicas[0].localPosition = canicas[2].localPosition;
-    //     canicas[2].localPosition = canicas[1].localPosition;
-    //     canicas[1].localPosition = temp;
-    // }
 }

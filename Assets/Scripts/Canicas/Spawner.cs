@@ -25,7 +25,7 @@ public class Spawner : MonoBehaviour
         
     }
 
-    void ManejarResultadoDeDeteccion(bool huboDestruccion)
+    public void ManejarResultadoDeDeteccion(bool huboDestruccion)
     {
         StartCoroutine(EsperarYGenerar(huboDestruccion));
     }
@@ -34,8 +34,14 @@ public class Spawner : MonoBehaviour
     {
         if (huboDestruccion)
         {
-            yield return new WaitForSeconds(1f);
+            GravedadDeCanicas gravedad = FindObjectOfType<GravedadDeCanicas>();
+            if (gravedad != null)
+            {
+                yield return new WaitUntil(() => gravedad.CanicasEstables());
+            }
         }
+
+        yield return new WaitForSeconds(0.1f);
 
         // Prevenir generación múltiple
         if (NoHayCanicaGrupoActivo())
@@ -49,7 +55,7 @@ public class Spawner : MonoBehaviour
     {
         if (detectorDeGrupos != null)
         {
-            detectorDeGrupos.IniciarDeteccion();
+            detectorDeGrupos.IniciarDeteccionConGravedad();
         }
     }
 

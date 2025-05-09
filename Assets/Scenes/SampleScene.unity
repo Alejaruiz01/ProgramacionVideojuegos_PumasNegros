@@ -2169,6 +2169,7 @@ GameObject:
   - component: {fileID: 454642482}
   - component: {fileID: 454642481}
   - component: {fileID: 454642484}
+  - component: {fileID: 454642485}
   m_Layer: 0
   m_Name: frog_spritesheet_6
   m_TagString: Untagged
@@ -2258,7 +2259,7 @@ Transform:
   m_GameObject: {fileID: 454642480}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.98, y: -2.636, z: 0}
+  m_LocalPosition: {x: -3.98, y: -2.57, z: 0}
   m_LocalScale: {x: 9, y: 9, z: 9}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2360,6 +2361,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &454642485
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 454642480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8927de0a3177f4247a7415f683ef4d92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &511301582
 GameObject:
   m_ObjectHideFlags: 0
@@ -4062,7 +4075,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6616654547065889786, guid: 80fbb1adcfb919d4fa2b1aecd589a339, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.46
+      value: 1.52
       objectReference: {fileID: 0}
     - target: {fileID: 6616654547065889786, guid: 80fbb1adcfb919d4fa2b1aecd589a339, type: 3}
       propertyPath: m_LocalPosition.z
