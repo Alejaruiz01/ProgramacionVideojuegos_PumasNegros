@@ -21,12 +21,19 @@ public class GameManager : MonoBehaviour
     public GameObject instructionsPanel;
     private bool isPaused = false;
 
+    private int puntosParaSubirNivel = 20;
+
     void Awake()
     {
         if (Instance == null)
-            Instance = this;
+            {
+                Instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
         else
+        {
             Destroy(gameObject);
+        }
     }
 
     void Start()
@@ -41,6 +48,12 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        GameObject canvas = GameObject.Find("Canvas");
+        if (canvas == null)
+        {
+            UnityEngine.Debug.LogError("No se encontrÃ³ ningÃºn Canvas en la escena.");
+            return;
+        }
 
         UpdateUI();
     }
@@ -58,25 +71,32 @@ public class GameManager : MonoBehaviour
         points += amount;
         UpdateUI();
 
-        if (points >= 200)
+        if (points >= puntosParaSubirNivel)
         {
             level++;
             points = 0;
-            StopAllCoroutines();
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            puntosParaSubirNivel += 10;
+
+            StartCoroutine(LevelUpCoroutine());
         }
     }
 
-    public void ShowMessage()
+    IEnumerator LevelUpCoroutine()
     {
-        StartCoroutine(ShowMessageCoroutine());
-    }
-
-    IEnumerator ShowMessageCoroutine()
-    {
+        // Detenemos el juego
+        Time.timeScale = 0f;
+        // Mostrar tu panel de mensaje (ya lo tienes en messagePanel)
         messagePanel.SetActive(true);
-        yield return new WaitForSeconds(1.5f);
+
+        yield return new WaitForSecondsRealtime(2f);
+
+        // Lo volvemos a ocultar
         messagePanel.SetActive(false);
+        // Volvemos a correr el tiempo
+        Time.timeScale = 1f;
+
+        // Recargamos la escena (o lo que quieras para resetear el tablero)
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void GameOver()
@@ -86,17 +106,12 @@ public class GameManager : MonoBehaviour
         reinicioButton.SetActive(true);
     }
 
-    public void OnReinicioButtonPressed()
-    {
-        Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
-
-
     public void TogglePause()
     {
         isPaused = !isPaused;
         pauseMenu.SetActive(isPaused);
+
+        if (!isPaused) pauseMenu.SetActive(false);
         Time.timeScale = isPaused ? 0f : 1f;
     }
 
@@ -107,26 +122,50 @@ public class GameManager : MonoBehaviour
 
     public void RestartGame()
     {
+        pauseMenu.SetActive(false);
+        gameOverPanel.SetActive(false);
+
+        // Resetear estado
+        points = 0;
+        level = 1;
+        puntosParaSubirNivel = 20;
+        UpdateUI();
+
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void OnReinicioButtonPressed()
+    {
+        RestartGame();
     }
 
     public void ShowInstructions()
     {
         instructionsPanel.SetActive(true);
-        pauseMenu.SetActive(false); // Oculta el menú de pausa
+        pauseMenu.SetActive(false); // Oculta el menï¿½ de pausa
     }
 
     public void HideInstructions()
     {
         instructionsPanel.SetActive(false);
-        pauseMenu.SetActive(true); // Vuelve a mostrar el menú de pausa
+        pauseMenu.SetActive(true); // Vuelve a mostrar el menï¿½ de pausa
     }
 
     void UpdateUI()
     {
-        pointsText.text = "Puntos: " + points;
-        //levelText.text = "Nivel: " + level;
+        if (pointsText != null)
+        pointsText.text = "Puntos: " + points + "/" + puntosParaSubirNivel;
+
+        if (levelText != null)
+            levelText.text = "Nivel: " + level;
+
+        UnityEngine.Debug.Log("Nivel: " + level + " | Gravedad: " + GetGravedadActual());
+    }
+
+    public float GetGravedadActual()
+    {
+        float escala = 0.1f + (level - 1) * 0.02f;
+        return Mathf.Clamp(escala, 0.1f, 2f);
     }
 }
-

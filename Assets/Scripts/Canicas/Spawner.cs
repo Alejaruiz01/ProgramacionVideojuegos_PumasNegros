@@ -10,19 +10,11 @@ public class Spawner : MonoBehaviour
 
     void Start()
     {
-        if (detectorDeGrupos == null)
-        {
-            detectorDeGrupos = FindObjectOfType<DetectorDeGrupos>();
-        }
+        detectorDeGrupos = FindObjectOfType<DetectorDeGrupos>();
 
         detectorDeGrupos.OnDeteccionTerminada += ManejarResultadoDeDeteccion;
         // Generar el primer grupo automáticamente al inicio
         GenerarGrupo();
-    }
-
-    void Update()
-    {
-        
     }
 
     public void ManejarResultadoDeDeteccion(bool huboDestruccion)
@@ -48,14 +40,13 @@ public class Spawner : MonoBehaviour
         {
             GenerarGrupo();
         }
-        
     }
 
     public void RevisarDestruccion()
     {
         if (detectorDeGrupos != null)
         {
-            detectorDeGrupos.IniciarDeteccionConGravedad();
+            detectorDeGrupos.IniciarDeteccion();
         }
     }
 

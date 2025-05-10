@@ -76,8 +76,6 @@ public class CanicaGrupoDetector : MonoBehaviour
             Rigidbody2D rb = clon.GetComponent<Rigidbody2D>();
             if (rb != null)
             {
-                rb.velocity = Vector2.zero;
-                rb.gravityScale = 1f;
                 rb.bodyType = RigidbodyType2D.Dynamic;
             }
 
@@ -94,6 +92,6 @@ public class CanicaGrupoDetector : MonoBehaviour
             clon.AddComponent<AutoCambiarLayer>().IniciarCambio("CanicaFija", 1.0f);
         }
 
-        FindObjectOfType<DetectorDeGrupos>()?.IniciarDeteccionConGravedad();
+        FindObjectOfType<DetectorDeGrupos>()?.IniciarDeteccion();
     }
 }

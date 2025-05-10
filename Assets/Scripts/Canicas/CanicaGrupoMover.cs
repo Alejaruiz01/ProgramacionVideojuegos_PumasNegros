@@ -10,20 +10,18 @@ public class CanicaGrupoMover : MonoBehaviour
     private bool moviendo = false;
     private float tiempoProximaRepeticion;
 
-    private Transform[] canicas = new Transform[3];
-    private Vector3[] posiciones = new Vector3[3];
+    private Transform[] canicas;
+    private Vector3[] posiciones;
 
     private void Start()
     {
-        // Obtener las canicas hijas automáticamente
-        for (int i = 0; i < 3; i++)
-        {
-            canicas[i] = transform.Find("Canica_" + i);
-        }
+        int n = transform.childCount;
+        canicas = new Transform[n];
+        posiciones = new Vector3[n];
 
-        // Guardar las posiciones iniciales (triángulo normal)
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < n; i++)
         {
+            canicas[i] = transform.GetChild(i);
             posiciones[i] = canicas[i].localPosition;
         }
     }
@@ -58,7 +56,7 @@ public class CanicaGrupoMover : MonoBehaviour
 
         if (Input.GetKey(KeyCode.DownArrow))
         {
-            transform.position += Vector3.down * distanciaMovimiento * 10f * Time.deltaTime; // Más rápido que el normal
+            transform.position += Vector3.down * distanciaMovimiento * 10f * Time.deltaTime;
         }
 
         if (Input.GetKeyDown(KeyCode.UpArrow))
@@ -74,8 +72,8 @@ public class CanicaGrupoMover : MonoBehaviour
 
     void RotarEnTriangulo()
     {
+        if (canicas.Length < 3) return;
         Vector3 temp = canicas[0].localPosition;
-
         canicas[0].localPosition = canicas[1].localPosition;
         canicas[1].localPosition = canicas[2].localPosition;
         canicas[2].localPosition = temp;
