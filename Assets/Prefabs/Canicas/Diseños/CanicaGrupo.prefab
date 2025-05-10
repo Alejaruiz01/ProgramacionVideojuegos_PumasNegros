@@ -65,7 +65,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   distanciaMovimiento: 0.15
-  tiempoEntreMovimientos: 0.2
 --- !u!114 &5306938872724929873
 MonoBehaviour:
   m_ObjectHideFlags: 0

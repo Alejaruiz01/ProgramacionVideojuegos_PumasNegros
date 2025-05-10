@@ -22,6 +22,8 @@ public class CanicaGrupoController : MonoBehaviour
 
     void GenerarCanicasAleatorias()
     {
+        float gravedadActual = GameManager.Instance.GetGravedadActual();
+
         for (int i = 0; i < 3; i++)
         {
             int indexColor = Random.Range(0, canicaColores.Length);
@@ -29,6 +31,12 @@ public class CanicaGrupoController : MonoBehaviour
 
             nuevaCanica.transform.localPosition = posiciones[i];
             nuevaCanica.name = "Canica_" + i;
+
+            Rigidbody2D rb = nuevaCanica.GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                rb.gravityScale = gravedadActual;
+            }
         }
     }
 }

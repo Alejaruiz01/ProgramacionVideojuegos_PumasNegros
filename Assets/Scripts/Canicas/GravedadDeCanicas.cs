@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class GravedadDeCanicas : MonoBehaviour
 {
-    public float velocidadCaida = 2f;
+    public float velocidadCaida = 8f;
     public LayerMask capaCanicaFija;
 
     public void AcomodarCanicas()
