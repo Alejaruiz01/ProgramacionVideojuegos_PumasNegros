@@ -93,11 +93,12 @@ List<IEnumerator> RevisarColor(GameObject[] canicas, string colorTag)
         }
     }
 
-    IEnumerator DestruirGrupo(List<GameObject> grupo)
+    private IEnumerator DestruirGrupo(List<GameObject> grupo)
     {
+        // Espera el tiempo antes de destruir
         yield return new WaitForSeconds(tiempoAntesDeDestruir);
 
-        // Efecto visual antes de destruir
+        // Efecto visual opcional
         foreach (GameObject canica in grupo)
         {
             SpriteRenderer sr = canica.GetComponent<SpriteRenderer>();
@@ -105,8 +106,10 @@ List<IEnumerator> RevisarColor(GameObject[] canicas, string colorTag)
                 sr.color = Color.white;
         }
 
-        yield return new WaitForSeconds(0.2f); // Breve espera visual
+        // Pequeño delay para el efecto
+        yield return new WaitForSeconds(0.2f);
 
+        // Destruye las canicas
         foreach (GameObject canica in grupo)
         {
             Destroy(canica);
