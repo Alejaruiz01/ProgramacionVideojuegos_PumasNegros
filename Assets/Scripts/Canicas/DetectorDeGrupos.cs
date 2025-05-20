@@ -9,7 +9,14 @@ public class DetectorDeGrupos : MonoBehaviour
     [SerializeField] private float tiempoAntesDeDestruir = 0.5f;
     [SerializeField] private float radioBusqueda = 0.55f;
     [SerializeField] private LayerMask capaCanicasFija;
+    [SerializeField] private AudioClip sonidoDestruccion;
     public bool huboDestruccion = false;
+    private AudioSource audioSource;
+
+    void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
 
     public void IniciarDeteccion()
     {
@@ -97,17 +104,12 @@ List<IEnumerator> RevisarColor(GameObject[] canicas, string colorTag)
     {
         // Espera el tiempo antes de destruir
         yield return new WaitForSeconds(tiempoAntesDeDestruir);
-
-        // Efecto visual opcional
-        foreach (GameObject canica in grupo)
-        {
-            SpriteRenderer sr = canica.GetComponent<SpriteRenderer>();
-            if (sr != null)
-                sr.color = Color.white;
-        }
-
-        // Pequeño delay para el efecto
         yield return new WaitForSeconds(0.2f);
+
+        if (sonidoDestruccion != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(sonidoDestruccion);
+        }
 
         // Destruye las canicas
         foreach (GameObject canica in grupo)
