@@ -85,7 +85,7 @@ public class GameManager : MonoBehaviour
     {
         // Detenemos el juego
         Time.timeScale = 0f;
-        // Mostrar tu panel de mensaje (ya lo tienes en messagePanel)
+        // Mostrar mensaje
         messagePanel.SetActive(true);
 
         yield return new WaitForSecondsRealtime(2f);
@@ -95,7 +95,7 @@ public class GameManager : MonoBehaviour
         // Volvemos a correr el tiempo
         Time.timeScale = 1f;
 
-        // Recargamos la escena (o lo que quieras para resetear el tablero)
+        // Recargamos la escena
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
